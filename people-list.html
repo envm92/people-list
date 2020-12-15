@@ -1,0 +1,144 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/communication-icons.html">
+<link rel="import" href="../iron-icons/hardware-icons.html">
+<link rel="import" href="../iron-icons/editor-icons.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+
+<dom-module id="people-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+        grid: auto-flow / 1fr 1fr;
+      }
+
+      paper-card {
+        vertical-align: top;
+        width: 256px;
+        margin: 10px;
+      }
+
+      .eye-color {
+        height: 20px;
+        width: 20px;
+        border-radius: 10px;
+      }
+
+      .friends-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .friend {
+        font-weight: bolder;
+        padding: 10px;
+        background: darkgrey;
+        border-radius: 20px;
+        margin: 2px;
+      }
+    </style>
+    <iron-ajax
+            auto
+            url="http://demo6292426.mockable.io/persons"
+            handle-as="json"
+            on-response="handleResponse"
+            debounce-duration="300"></iron-ajax>
+    <dom-repeat items="{{list}}">
+      <template>
+        <paper-card heading="{{item.name.last}}, {{item.name.first}}" image="{{item.picture}}">
+          <div class="card-content">
+            <paper-icon-item>
+              <iron-icon icon="communication:phone" slot="item-icon"></iron-icon>
+              {{item.phone}}
+            </paper-icon-item>
+            <paper-icon-item>
+              <iron-icon icon="editor:attach-money" slot="item-icon"></iron-icon>
+              {{maskBalance(item.balance)}}
+            </paper-icon-item>
+            <paper-icon-item>
+              <div class="eye-color" style$="background-color: {{item.eyeColor}}" slot="item-icon"></div>
+              Eye color
+            </paper-icon-item>
+
+            <iron-collapse opened="{{item.open}}">
+              <paper-item>Friends</paper-item>
+              <div class="friends-list">
+                <dom-repeat items="{{item.friends}}" as="friend">
+                  <template>
+                    <div class="friend">
+                      <span>{{friend.name}}</span>
+                    </div>
+                  </template>
+                </dom-repeat>
+              </div>
+              <paper-item>Location</paper-item>
+              <img src="{{getMapURL(item)}}"/>
+            </iron-collapse>
+          </div>
+          <div class="card-actions">
+            <paper-icon-button icon="expand-more" on-click="expandMoreInfo"></paper-icon-button>
+          </div>
+        </paper-card>
+      </template>
+    </dom-repeat>
+  </template>
+
+  <script>
+    /**
+     * `people-list`
+     *
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class PeopleList extends Polymer.Element {
+
+      eyesColors = new Set();
+
+      static get is() {
+        return 'people-list';
+      }
+
+      static get properties() {
+        return {
+          list: {
+            type: Array,
+            value: []
+          }
+        };
+      }
+
+      expandMoreInfo(e) {
+        this.set(`list.${e.model.index}.open`, !e.model.item.open);
+        e.path[0].icon = (e.model.item.open) ? 'expand-less' : 'expand-more';
+      }
+
+      maskBalance(balance) {
+        var rgx = /[$,]+/g;
+        return balance.replaceAll(rgx, "");
+      }
+
+      handleResponse(e, ironRequest) {
+        if (ironRequest.status === 200) {
+          this.set('list', ironRequest.response);
+          console.log(this.list[0]);
+        }
+      }
+
+      getMapURL(item) {
+        return `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${item.latitude},${item.longitude}/5?mapSize=225,225&pp=${item.latitude},${item.longitude};66&mapLayer=Basemap,Buildings&key=AuK_RR4rfzQdoyrg7zoWCOzT_3wCjZaxSTNrq5s5_CfF4vmd46JX_oPwi3pSxIli`;
+      }
+    }
+
+    window.customElements.define(PeopleList.is, PeopleList);
+  </script>
+</dom-module>
