@@ -31,7 +31,7 @@
         };
         --paper-card-header-image-text:{
           color:white;
-          text-shadow: 2px 2px #2d2828;
+          text-shadow: 0px 0px 7px rgba(150, 150, 150, 1);
         }
       }
 
@@ -77,14 +77,16 @@
               <div class="eye-color" style$="background-color: {{item.eyeColor}}" slot="item-icon"></div>
               Eye color
             </paper-icon-item>
-            <paper-icon-item>
-              <div slot="item-icon">
-                <span>{{getFavoriteFruit(item.favoriteFruit)}}</span>
-              </div>
-              FavoriteFruit
-            </paper-icon-item>
-
             <iron-collapse opened="{{item.open}}">
+              <paper-item>
+                <div slot="item-icon">
+                  <span>{{getFavoriteFruit(item.favoriteFruit)}}</span>
+                </div>
+                <paper-item-body two-line>
+                  <div>FavoriteFruit</div>
+                  <div secondary><span>{{getFavoriteFruit(item.favoriteFruit)}}</span> | {{item.favoriteFruit}}</div>
+                </paper-item-body>
+              </paper-item>
               <paper-item>Friends</paper-item>
               <div class="friends-list">
                 <dom-repeat items="{{item.friends}}" as="friend">
