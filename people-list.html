@@ -115,8 +115,6 @@
      */
     class PeopleList extends Polymer.Element {
 
-      eyesColors = new Set();
-
       static get is() {
         return 'people-list';
       }
@@ -143,13 +141,10 @@
       handleResponse(e, ironRequest) {
         if (ironRequest.status === 200) {
           this.set('list', ironRequest.response);
-          console.log(this.list[0]);
         }
       }
 
       getMapURL(item) {
-        this.eyesColors.add(item.favoriteFruit);
-        console.log(this.eyesColors);
         return `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${item.latitude},${item.longitude}/5?mapSize=225,225&pp=${item.latitude},${item.longitude};66&mapLayer=Basemap,Buildings&key=AuK_RR4rfzQdoyrg7zoWCOzT_3wCjZaxSTNrq5s5_CfF4vmd46JX_oPwi3pSxIli`;
       }
 
