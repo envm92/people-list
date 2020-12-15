@@ -23,6 +23,13 @@
         vertical-align: top;
         width: 256px;
         margin: 10px;
+        --paper-card-header-image: {
+          max-height: 256px;
+        };
+        --paper-card-header-image-text:{
+          color:white;
+          text-shadow: 2px 2px #2d2828;
+        }
       }
 
       .eye-color {
@@ -66,6 +73,12 @@
             <paper-icon-item>
               <div class="eye-color" style$="background-color: {{item.eyeColor}}" slot="item-icon"></div>
               Eye color
+            </paper-icon-item>
+            <paper-icon-item>
+              <div slot="item-icon">
+                <span>{{getFavoriteFruit(item.favoriteFruit)}}</span>
+              </div>
+              FavoriteFruit
             </paper-icon-item>
 
             <iron-collapse opened="{{item.open}}">
@@ -135,7 +148,20 @@
       }
 
       getMapURL(item) {
+        this.eyesColors.add(item.favoriteFruit);
+        console.log(this.eyesColors);
         return `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${item.latitude},${item.longitude}/5?mapSize=225,225&pp=${item.latitude},${item.longitude};66&mapLayer=Basemap,Buildings&key=AuK_RR4rfzQdoyrg7zoWCOzT_3wCjZaxSTNrq5s5_CfF4vmd46JX_oPwi3pSxIli`;
+      }
+
+      getFavoriteFruit(favoriteFruit) {
+        switch (favoriteFruit) {
+          case 'banana':
+            return '🍌';
+          case 'apple':
+            return '🍎';
+          case 'strawberry':
+            return '🍓';
+        }
       }
     }
 
