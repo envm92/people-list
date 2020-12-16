@@ -1,0 +1,160 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/communication-icons.html">
+<link rel="import" href="../iron-icons/hardware-icons.html">
+<link rel="import" href="../iron-icons/editor-icons.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+
+<dom-module id="person-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-card {
+        vertical-align: top;
+        width: 100%;
+        margin: 10px;
+        --paper-card-header: {
+          height: 150px;
+        };
+        --paper-card-header-image: {
+          object-fit: cover;
+        };
+        --paper-card-header-image-text:{
+          color:white;
+          text-shadow: 0px 0px 7px rgba(150, 150, 150, 1);
+        }
+      }
+
+      .eye-color {
+        height: 20px;
+        width: 20px;
+        border-radius: 10px;
+      }
+
+      .friends-list {
+        padding: 12px 0;
+      }
+
+      .friend-chip {
+        display: inline-block;
+        background: #e0e0e0;
+        padding: 0 12px;
+        border-radius: 32px;
+        font-size: 13px;
+        height: 32px;
+        line-height: 32px;
+        margin: 0 5px 3px 0;
+      }
+    </style>
+    <paper-card heading="{{person.name.last}}, {{person.name.first}}" image="{{person.picture}}">
+    <div class="card-content">
+      <paper-icon-item>
+        <iron-icon icon="communication:phone" slot="item-icon"></iron-icon>
+        {{person.phone}}
+      </paper-icon-item>
+      <paper-icon-item>
+        <iron-icon icon="editor:attach-money" slot="item-icon"></iron-icon>
+        {{maskBalance()}}
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="eye-color" style$="background-color: {{person.eyeColor}}" slot="item-icon"></div>
+        Eye color
+      </paper-icon-item>
+      <iron-collapse opened="{{isOpen}}">
+        <paper-item>
+          <paper-item-body two-line>
+            <div>FavoriteFruit</div>
+            <div secondary><span>{{getFavoriteFruit()}}</span> | {{person.favoriteFruit}}</div>
+          </paper-item-body>
+        </paper-item>
+        <paper-item>Friends</paper-item>
+        <div class="friends-list">
+          <dom-repeat items="{{person.friends}}" as="friend">
+            <template>
+              <div class="friend-chip">
+                {{friend.name}}
+              </div>
+            </template>
+          </dom-repeat>
+        </div>
+        <paper-item>Location</paper-item>
+        <img src="{{getMapURL()}}"/>
+      </iron-collapse>
+    </div>
+    <div class="card-actions">
+      <paper-button on-click="expandMoreInfo">
+        <template is="dom-if" if="{{isOpen}}">
+          COLLAPSE
+        </template>
+        <template is="dom-if" if="{{!isOpen}}">
+          EXPAND
+        </template>
+      </paper-button>
+    </div>
+    </paper-card>
+  </template>
+  <script>
+    /**
+     * `person-card`
+     *
+     *
+     * @customElement
+     * @polymer
+     */
+    class PersonCard extends Polymer.Element {
+      static get is() {
+        return 'person-card';
+      }
+
+      static get properties() {
+        return {
+          person: {
+            type: Object,
+            value: {},
+            reflectToAttribute: true
+          } ,
+          isOpen: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      expandMoreInfo() {
+        this.set('isOpen', !this.isOpen);
+      }
+
+      maskBalance() {
+        var rgx = /[$,]+/g;
+        return this.person.balance.replaceAll(rgx, "");
+      }
+
+      getMapURL() {
+        return `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${this.person.latitude},${this.person.longitude}/5?mapSize=225,225&pp=${this.person.latitude},${this.person.longitude};66&mapLayer=Basemap,Buildings&key=AuK_RR4rfzQdoyrg7zoWCOzT_3wCjZaxSTNrq5s5_CfF4vmd46JX_oPwi3pSxIli`;
+      }
+
+      getFavoriteFruit() {
+        switch (this.person.favoriteFruit) {
+          case 'banana':
+            return '🍌';
+          case 'apple':
+            return '🍎';
+          case 'strawberry':
+            return '🍓';
+        }
+      }
+
+    }
+
+    window.customElements.define(PersonCard.is, PersonCard);
+  </script>
+</dom-module>
