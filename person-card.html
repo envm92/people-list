@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icons/communication-icons.html">
@@ -20,6 +21,7 @@
       :host {
         display: block;
         --eye-color: black;
+        --iron-icon-fill-color: #4bb6d6;
       }
 
       hr {
@@ -78,12 +80,21 @@
         font-size: 20px;
         color: #00BB33;
       }
+      .flex-end-justified {
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
+      }
+      .status{
+        align-items: center;
+        padding-top: 5px;
+        padding-right: 10px;
+      }
     </style>
     <paper-card heading="{{person.name.last}}, {{person.name.first}}" image="{{person.picture}}">
     <div class="card-content">
-      <div>
+      <div class="container flex-end-justified">
         <template is="dom-if" if="{{person.isActive}}">
-          <span class="online-icon"> ■ </span> Active
+          <div class="status"><span class="online-icon"> ■ </span> Active</div>
         </template>
         <paper-icon-button id="number" icon="communication:email" alt="inbox">
         </paper-icon-button>
@@ -246,7 +257,6 @@
 
       _setUnreadMessages() {
         this.set('unreadMessages', this.person.greeting.replace(/\D/g, ''));
-        console.log(this.unreadMessages);
       }
       _setEyeColor() {
         const colors = {
@@ -258,7 +268,6 @@
       }
 
       _listenPerson() {
-        console.log(this.person);
         this._setEyeColor();
         this._setUnreadMessages();
       }
