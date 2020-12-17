@@ -35,13 +35,18 @@
       }
 
       .eye-color {
-        height: 20px;
-        width: 20px;
-        border-radius: 10px;
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        box-shadow: inset -25px -25px 40px rgba(0,0,0,.5);
+        background-image: -webkit-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
+        background-image: -moz-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
+        background-image: -o-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
+        background-image: -ms-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
       }
 
       .friends-list {
-        padding: 12px 0;
+        padding: 10px 0;
       }
 
       .friend-chip {
@@ -54,29 +59,48 @@
         line-height: 32px;
         margin: 0 5px 3px 0;
       }
+      .fruit {
+        font-size: 24px;
+      }
+      .label {
+        font-size: 13px;
+        color: #114453;
+      }
     </style>
     <paper-card heading="{{person.name.last}}, {{person.name.first}}" image="{{person.picture}}">
     <div class="card-content">
       <paper-icon-item>
         <iron-icon icon="communication:phone" slot="item-icon"></iron-icon>
-        {{person.phone}}
+        <paper-item-body two-line>
+          <div class="label">Phone</div>
+          <div secondary>{{person.phone}}</div>
+        </paper-item-body>
       </paper-icon-item>
       <paper-icon-item>
         <iron-icon icon="editor:attach-money" slot="item-icon"></iron-icon>
-        {{maskBalance()}}
+        <paper-item-body two-line>
+          <div class="label">Balance</div>
+          <div secondary>{{maskBalance()}}</div>
+        </paper-item-body>
       </paper-icon-item>
       <paper-icon-item>
         <div class="eye-color" style$="background-color: {{person.eyeColor}}" slot="item-icon"></div>
-        Eye color
+        <paper-item-body two-line>
+          <div class="label">Eye color</div>
+          <div secondary>{{person.eyeColor}}</div>
+        </paper-item-body>
       </paper-icon-item>
       <iron-collapse opened="{{isOpen}}">
-        <paper-item>
+        <paper-icon-item>
+          <span slot="item-icon" class="fruit">
+            {{getFavoriteFruit()}}
+          </span>
           <paper-item-body two-line>
-            <div>FavoriteFruit</div>
-            <div secondary><span>{{getFavoriteFruit()}}</span> | {{person.favoriteFruit}}</div>
+            <div class="label">FavoriteFruit</div>
+            <div secondary>{{person.favoriteFruit}}</div>
           </paper-item-body>
-        </paper-item>
-        <paper-item>Friends</paper-item>
+        </paper-icon-item>
+        <paper-item class="label">Friends</paper-item>
         <div class="friends-list">
           <dom-repeat items="{{person.friends}}" as="friend">
             <template>
@@ -86,7 +110,7 @@
             </template>
           </dom-repeat>
         </div>
-        <paper-item>Location</paper-item>
+        <paper-item class="label">Location</paper-item>
         <img src="{{getMapURL()}}"/>
       </iron-collapse>
     </div>
