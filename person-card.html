@@ -38,11 +38,6 @@
         height: 24px;
         width: 24px;
         border-radius: 50%;
-        box-shadow: inset -25px -25px 40px rgba(0,0,0,.5);
-        background-image: -webkit-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
-        background-image: -moz-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
-        background-image: -o-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
-        background-image: -ms-linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
       }
 
       .friends-list {
@@ -84,7 +79,7 @@
         </paper-item-body>
       </paper-icon-item>
       <paper-icon-item>
-        <div class="eye-color" style$="background-color: {{person.eyeColor}}" slot="item-icon"></div>
+        <div class="eye-color" style$="background-color: {{getEyeColor()}}" slot="item-icon"></div>
         <paper-item-body two-line>
           <div class="label">Eye color</div>
           <div secondary>{{person.eyeColor}}</div>
@@ -167,14 +162,21 @@
       }
 
       getFavoriteFruit() {
-        switch (this.person.favoriteFruit) {
-          case 'banana':
-            return '🍌';
-          case 'apple':
-            return '🍎';
-          case 'strawberry':
-            return '🍓';
-        }
+        const fruits = {
+          'banana': '🍌',
+          'apple': '🍎',
+          'strawberry':  '🍓'
+        };
+        return fruits[this.person.favoriteFruit];
+      }
+
+      getEyeColor() {
+        const colors = {
+          'blue': '#17a9ba',
+          'green': '#3aa447',
+          'brown':  '#ac6434'
+        };
+        return colors[this.person.eyeColor];
       }
 
     }
