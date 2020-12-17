@@ -4,7 +4,10 @@
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icons/communication-icons.html">
 <link rel="import" href="../iron-icons/hardware-icons.html">
+<link rel="import" href="../iron-icons/maps-icons.html">
+<link rel="import" href="../iron-icons/social-icons.html">
 <link rel="import" href="../iron-icons/editor-icons.html">
+<link rel="import" href="../paper-badge/paper-badge.html">
 <link rel="import" href="../paper-card/paper-card.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
@@ -16,6 +19,15 @@
     <style>
       :host {
         display: block;
+        --eye-color: black;
+      }
+
+      hr {
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: .5em 0;
+        padding: 0;
       }
 
       paper-card {
@@ -38,13 +50,14 @@
         height: 24px;
         width: 24px;
         border-radius: 50%;
+        background-color: var(--eye-color);
       }
 
-      .friends-list {
+      .chip-list {
         padding: 10px 0;
       }
 
-      .friend-chip {
+      .chip {
         display: inline-block;
         background: #e0e0e0;
         padding: 0 12px;
@@ -61,52 +74,108 @@
         font-size: 13px;
         color: #114453;
       }
+      .online-icon {
+        font-size: 20px;
+        color: #00BB33;
+      }
     </style>
     <paper-card heading="{{person.name.last}}, {{person.name.first}}" image="{{person.picture}}">
     <div class="card-content">
-      <paper-icon-item>
-        <iron-icon icon="communication:phone" slot="item-icon"></iron-icon>
+      <div>
+        <template is="dom-if" if="{{person.isActive}}">
+          <span class="online-icon"> ■ </span> Active
+        </template>
+        <paper-icon-button id="number" icon="communication:email" alt="inbox">
+        </paper-icon-button>
+        <paper-badge for="number" label="{{unreadMessages}}">
+        </paper-badge>
+      </div>
+      <div>
+        <div class="chip-list">
+          <dom-repeat items="{{person.tags}}" as="tag">
+            <template>
+              <div class="chip">
+                {{tag}}
+              </div>
+            </template>
+          </dom-repeat>
+        </div>
+      </div>
+      <paper-item>
         <paper-item-body two-line>
-          <div class="label">Phone</div>
-          <div secondary>{{person.phone}}</div>
+          <div class="label">About</div>
+          <div secondary>{{person.about}}</div>
         </paper-item-body>
-      </paper-icon-item>
-      <paper-icon-item>
-        <iron-icon icon="editor:attach-money" slot="item-icon"></iron-icon>
-        <paper-item-body two-line>
-          <div class="label">Balance</div>
-          <div secondary>{{maskBalance()}}</div>
-        </paper-item-body>
-      </paper-icon-item>
-      <paper-icon-item>
-        <div class="eye-color" style$="background-color: {{getEyeColor()}}" slot="item-icon"></div>
-        <paper-item-body two-line>
-          <div class="label">Eye color</div>
-          <div secondary>{{person.eyeColor}}</div>
-        </paper-item-body>
-      </paper-icon-item>
+      </paper-item>
       <iron-collapse opened="{{isOpen}}">
+        <hr>
+        <paper-icon-item>
+          <iron-icon icon="communication:email" slot="item-icon"></iron-icon>
+          <paper-item-body two-line>
+            <div class="label">Email</div>
+            <div secondary>{{person.email}}</div>
+          </paper-item-body>
+        </paper-icon-item>
+        <paper-icon-item>
+          <iron-icon icon="communication:phone" slot="item-icon"></iron-icon>
+          <paper-item-body two-line>
+            <div class="label">Phone</div>
+            <div secondary>{{person.phone}}</div>
+          </paper-item-body>
+        </paper-icon-item>
+        <paper-icon-item>
+          <iron-icon icon="social:domain" slot="item-icon"></iron-icon>
+          <paper-item-body two-line>
+            <div class="label">Company</div>
+            <div secondary>{{person.company}}</div>
+          </paper-item-body>
+        </paper-icon-item>
+        <paper-icon-item>
+          <iron-icon icon="social:cake" slot="item-icon"></iron-icon>
+          <paper-item-body two-line>
+            <div class="label">Age</div>
+            <div secondary>{{person.age}}</div>
+          </paper-item-body>
+        </paper-icon-item>
+        <paper-icon-item>
+          <iron-icon icon="editor:attach-money" slot="item-icon"></iron-icon>
+          <paper-item-body two-line>
+            <div class="label">Balance</div>
+            <div secondary>{{maskBalance()}}</div>
+          </paper-item-body>
+        </paper-icon-item>
+        <paper-icon-item>
+          <div class="eye-color" slot="item-icon"></div>
+          <paper-item-body two-line>
+            <div class="label">Eye color</div>
+            <div secondary>{{person.eyeColor}}</div>
+          </paper-item-body>
+        </paper-icon-item>
         <paper-icon-item>
           <span slot="item-icon" class="fruit">
             {{getFavoriteFruit()}}
           </span>
           <paper-item-body two-line>
-            <div class="label">FavoriteFruit</div>
+            <div class="label">Favorite Fruit</div>
             <div secondary>{{person.favoriteFruit}}</div>
           </paper-item-body>
         </paper-icon-item>
-        <paper-item class="label">Friends</paper-item>
-        <div class="friends-list">
-          <dom-repeat items="{{person.friends}}" as="friend">
-            <template>
-              <div class="friend-chip">
-                {{friend.name}}
-              </div>
-            </template>
-          </dom-repeat>
-        </div>
+        <paper-icon-item>
+          <iron-icon icon="maps:place" slot="item-icon"></iron-icon>
+          <paper-item-body two-line>
+            <div class="label">Address</div>
+            <div secondary>{{person.address}}</div>
+          </paper-item-body>
+        </paper-icon-item>
         <paper-item class="label">Location</paper-item>
         <img src="{{getMapURL()}}"/>
+        <hr/>
+        <paper-item class="label">Friends</paper-item>
+        <dom-repeat items="{{person.friends}}" as="friend">
+          <template>
+            <paper-item>{{friend.name}}</paper-item>
+          </template>
+        </dom-repeat>
       </iron-collapse>
     </div>
     <div class="card-actions">
@@ -139,11 +208,16 @@
           person: {
             type: Object,
             value: {},
-            reflectToAttribute: true
+            reflectToAttribute: true,
+            observer: '_listenPerson'
           } ,
           isOpen: {
             type: Boolean,
             value: false
+          },
+          unreadMessages: {
+            type: Number,
+            value: 0
           }
         };
       }
@@ -170,13 +244,23 @@
         return fruits[this.person.favoriteFruit];
       }
 
-      getEyeColor() {
+      _setUnreadMessages() {
+        this.set('unreadMessages', this.person.greeting.replace(/\D/g, ''));
+        console.log(this.unreadMessages);
+      }
+      _setEyeColor() {
         const colors = {
           'blue': '#17a9ba',
           'green': '#3aa447',
           'brown':  '#ac6434'
         };
-        return colors[this.person.eyeColor];
+        this.updateStyles({'--eye-color': colors[this.person.eyeColor]});
+      }
+
+      _listenPerson() {
+        console.log(this.person);
+        this._setEyeColor();
+        this._setUnreadMessages();
       }
 
     }
