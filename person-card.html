@@ -158,7 +158,7 @@
           <iron-icon icon="editor:attach-money" slot="item-icon"></iron-icon>
           <paper-item-body two-line>
             <div class="label">Balance</div>
-            <div secondary>{{maskBalance()}}</div>
+            <div secondary>{{_maskBalance()}}</div>
           </paper-item-body>
         </paper-icon-item>
         <paper-icon-item>
@@ -170,7 +170,7 @@
         </paper-icon-item>
         <paper-icon-item>
           <span slot="item-icon" class="fruit">
-            {{getFavoriteFruit()}}
+            {{_getFavoriteFruitEmoji()}}
           </span>
           <paper-item-body two-line>
             <div class="label">Favorite Fruit</div>
@@ -186,7 +186,7 @@
         </paper-icon-item>
         <paper-item class="label">Location</paper-item>
         <div class="container flex-center-justified">
-          <img src="{{getMapURL()}}"/>
+          <img src="{{_getMapURL()}}"/>
         </div>
         <hr/>
         <paper-item class="label">Friends</paper-item>
@@ -198,7 +198,7 @@
       </iron-collapse>
     </div>
     <div class="card-actions">
-      <paper-button on-click="expandMoreInfo">
+      <paper-button on-click="_expand">
         <template is="dom-if" if="{{isOpen}}">
           COLLAPSE
         </template>
@@ -242,20 +242,20 @@
         };
       }
 
-      expandMoreInfo() {
+      _expand() {
         this.set('isOpen', !this.isOpen);
       }
 
-      maskBalance() {
+      _maskBalance() {
         var rgx = /[$,]+/g;
         return this.person.balance.replaceAll(rgx, "");
       }
 
-      getMapURL() {
+      _getMapURL() {
         return `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${this.person.latitude},${this.person.longitude}/5?mapSize=500,225&pp=${this.person.latitude},${this.person.longitude};66&mapLayer=Basemap,Buildings&key=AuK_RR4rfzQdoyrg7zoWCOzT_3wCjZaxSTNrq5s5_CfF4vmd46JX_oPwi3pSxIli`;
       }
 
-      getFavoriteFruit() {
+      _getFavoriteFruitEmoji() {
         const fruits = {
           'banana': '🍌',
           'apple': '🍎',
