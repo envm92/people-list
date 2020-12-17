@@ -80,9 +80,11 @@
         font-size: 20px;
         color: #00BB33;
       }
-      .flex-end-justified {
+      .flex-horizontal {
         @apply --layout-horizontal;
-        @apply --layout-end-justified;
+      }
+      .flex-child {
+        @apply --layout-flex;
       }
       .status{
         align-items: center;
@@ -92,7 +94,18 @@
     </style>
     <paper-card heading="{{person.name.last}}, {{person.name.first}}" image="{{person.picture}}">
     <div class="card-content">
-      <div class="container flex-end-justified">
+      <div class="container flex-horizontal">
+        <div class="flex-child">
+          <div class="chip-list">
+            <dom-repeat items="{{person.tags}}" as="tag">
+              <template>
+                <div class="chip">
+                  {{tag}}
+                </div>
+              </template>
+            </dom-repeat>
+          </div>
+        </div>
         <template is="dom-if" if="{{person.isActive}}">
           <div class="status"><span class="online-icon"> ■ </span> Active</div>
         </template>
@@ -100,17 +113,6 @@
         </paper-icon-button>
         <paper-badge for="number" label="{{unreadMessages}}">
         </paper-badge>
-      </div>
-      <div>
-        <div class="chip-list">
-          <dom-repeat items="{{person.tags}}" as="tag">
-            <template>
-              <div class="chip">
-                {{tag}}
-              </div>
-            </template>
-          </dom-repeat>
-        </div>
       </div>
       <paper-item>
         <paper-item-body two-line>
