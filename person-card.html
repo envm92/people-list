@@ -86,6 +86,10 @@
       .flex-child {
         @apply --layout-flex;
       }
+      .flex-center-justified {
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+      }
       .status{
         align-items: center;
         padding-top: 5px;
@@ -181,7 +185,9 @@
           </paper-item-body>
         </paper-icon-item>
         <paper-item class="label">Location</paper-item>
-        <img src="{{getMapURL()}}"/>
+        <div class="container flex-center-justified">
+          <img src="{{getMapURL()}}"/>
+        </div>
         <hr/>
         <paper-item class="label">Friends</paper-item>
         <dom-repeat items="{{person.friends}}" as="friend">
@@ -246,7 +252,7 @@
       }
 
       getMapURL() {
-        return `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${this.person.latitude},${this.person.longitude}/5?mapSize=225,225&pp=${this.person.latitude},${this.person.longitude};66&mapLayer=Basemap,Buildings&key=AuK_RR4rfzQdoyrg7zoWCOzT_3wCjZaxSTNrq5s5_CfF4vmd46JX_oPwi3pSxIli`;
+        return `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${this.person.latitude},${this.person.longitude}/5?mapSize=500,225&pp=${this.person.latitude},${this.person.longitude};66&mapLayer=Basemap,Buildings&key=AuK_RR4rfzQdoyrg7zoWCOzT_3wCjZaxSTNrq5s5_CfF4vmd46JX_oPwi3pSxIli`;
       }
 
       getFavoriteFruit() {
