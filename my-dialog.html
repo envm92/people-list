@@ -1,0 +1,57 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-overlay-behavior/iron-overlay-backdrop.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<dom-module id="my-dialog">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+    </style>
+    <h1>Hello world</h1>
+    <paper-button autofocus on-click="_requestList">Example</paper-button>
+    <paper-button  on-click="_close">Close</paper-button>
+  </template>
+  <script>
+
+    /**
+     * `my-dialog`
+     *
+     *
+     * @customElement
+     * @polymer
+     */
+    class MyDialog extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior], Polymer.Element) {
+      static get is() {
+        return 'my-dialog';
+      }
+
+      static get properties() {
+        return {
+          openExample: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+            notify: true
+          }
+        };
+      }
+
+      _close() {
+        this.close();
+      }
+
+      _requestList() {
+        this.set('openExample', true);
+      }
+
+    }
+
+    window.customElements.define(MyDialog.is, MyDialog);
+  </script>
+</dom-module>

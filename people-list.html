@@ -1,6 +1,11 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="./person-card.html">
+<link rel="import" href="./my-dialog.html">
 
 <dom-module id="people-list">
   <template>
@@ -8,13 +13,34 @@
       :host {
         grid: auto-flow / 1fr 1fr;
       }
+      .flex-center-justified {
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+      }
     </style>
     <iron-ajax
-            auto
+            id="ajaxRequest"
             url="http://demo6292426.mockable.io/persons"
             handle-as="json"
             on-response="handleResponse"
             debounce-duration="300"></iron-ajax>
+    <div class="container flex-center-justified">
+      <paper-spinner-lite active="{{isLoading}}"></paper-spinner-lite>
+    </div>
+    <paper-dialog id="polymerDialog" modal>
+      <h2>Show</h2>
+      <div class="buttons">
+        <paper-button autofocus on-click="_closePolymerDialog">Example</paper-button>
+        <paper-button on-click="_openMyDialog">My attempt to use mixins</paper-button>
+      </div>
+    </paper-dialog>
+    <my-dialog
+            id="customDialog"
+            with-backdrop
+            no-cancel-on-outside-click="false"
+            no-cancel-on-esc-key="false"
+            on-open-example-changed="_validRequestList"
+    ></my-dialog>
     <dom-repeat items="{{list}}">
       <template>
         <person-card person="[[item]]"></person-card>
@@ -43,13 +69,45 @@
           list: {
             type: Array,
             value: []
+          },
+          isLoading: {
+            type: Boolean,
+            value: false
           }
         };
       }
 
       handleResponse(e, ironRequest) {
         if (ironRequest.status === 200) {
+          this.set('isLoading', false);
           this.set('list', ironRequest.response);
+        }
+      }
+
+      ready() {
+        super.ready();
+        this.$.polymerDialog.open();
+      }
+
+      _openMyDialog(e) {
+        this.$.customDialog.open();
+      }
+
+      _requestList() {
+        this.set('isLoading', true);
+        this.$.ajaxRequest.generateRequest();
+      }
+
+      _closePolymerDialog() {
+        this.$.polymerDialog.close();
+        this._requestList();
+      }
+
+      _validRequestList(e) {
+        if (e.detail.value && this.$.customDialog.opened) {
+          this.$.customDialog.close();
+          this.$.polymerDialog.close();
+          this._requestList();
         }
       }
     }
